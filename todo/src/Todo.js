@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 
 function reducer(state, action) {
     switch (action.type) {
@@ -17,8 +17,13 @@ function reducer(state, action) {
         case"clear-todo":
         return{
             todos: state.todos.filter((item) => {return !item.completed}),
+        };
+        case"update-todo-count":
+        return{
+            todos: state.todos,
             todoCount: state.todos.length
-        } 
+        };
+
         default:
             return state;
     }
@@ -29,32 +34,35 @@ function Todo() {
         todoCount: 0
     })
     const [text, setText] =useState();
+
     return(
         <div className="todo-card">
-        <form
-        onSubmit={e => {
-          e.preventDefault();
-          dispatch({ type: "add-todo", text });
-          setText("");
-        }}
-      >
-        <input value={text} onChange={e => setText(e.target.value)} />
-        <button>Add Todo</button>
-      </form>
-      <div>number of todos: {todoCount}</div>
-      {todos.map((text, index) => (
-        <div
-          key={text.text}
-          onClick={() => dispatch({ type: "toggle-todo" , index })}
-          style={{
-            textDecoration: text.completed ? "line-through" : ""
-          }}
+            <form
+            onSubmit={e => {
+            e.preventDefault();
+            dispatch({ type: "add-todo", text });
+            setText("");
+            }}
         >
-          {text.text}
-        </div>
-        
-      ))}
-      <button onClick={() => dispatch({ type: "clear-todo",  })}>clear todos</button>
+            <input value={text} onChange={e => setText(e.target.value)} />
+            <button>Add Todo</button>
+        </form>
+        <div>number of todos: {todoCount}</div>
+        {todos.map((text, index) => (
+            <div
+            key={text.text}
+            onClick={() => dispatch({ type: "toggle-todo" , index })}
+            style={{
+                textDecoration: text.completed ? "line-through" : ""
+            }}
+            >
+            {text.text}
+            </div>    
+        ))}
+            <button onClick={() =>{
+                dispatch({ type: "clear-todo",  });
+                dispatch({ type: "update-todo-count",})
+            } }>clear todos</button>
         </div>
     );
 }
